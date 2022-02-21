@@ -184,6 +184,12 @@ namespace route {
                 return true;
             }
 
+            int i = 0;
+            for (auto point : destination_points) {
+                ROS_DEBUG_STREAM("Point " << i << " (x,y) is " << point.x() << "," << point.y());
+                std::cout<<"Point " << i << " (x,y) is " << point.x() << "," << point.y() << '\n';
+            }
+
             if (!world_model_ || !world_model_->getMap()) {
                 ROS_ERROR_STREAM("World model has not been initialized.");
                 resp.errorStatus = cav_srvs::SetActiveRouteResponse::ROUTING_FAILURE;
