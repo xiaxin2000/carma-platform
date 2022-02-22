@@ -622,6 +622,9 @@ namespace route {
 
     bool RouteGeneratorWorker::spin_callback()
     {
+        // Update vehicle_pose_
+        bumper_pose_cb();
+
         if(reroutingChecker()==true)
         {
            this->rs_worker_.on_route_event(RouteStateWorker::RouteEvent::ROUTE_INVALIDATION);

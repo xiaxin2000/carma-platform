@@ -950,7 +950,7 @@ TEST(WMBroadcaster, geofenceFromMsgTest)
 
   // test restricted lane (trucks and buses will not have access)
   msg_v01.params.detail.choice = cav_msgs::TrafficControlDetail::RESTRICTED_CHOICE;
-  j2735_msgs::TrafficControlVehClass restricted_veh_class1
+  j2735_msgs::TrafficControlVehClass restricted_veh_class1;
   j2735_msgs::TrafficControlVehClass restricted_veh_class2;
   restricted_veh_class1.vehicle_class = j2735_msgs::TrafficControlVehClass::TWO_AXLE_SIX_TIRE_SINGLE_UNIT_TRUCK;
   restricted_veh_class2.vehicle_class = j2735_msgs::TrafficControlVehClass::BUS;
