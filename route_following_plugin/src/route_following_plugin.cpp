@@ -592,6 +592,17 @@ void setManeuverLaneletIds(cav_msgs::Maneuver& mvr, lanelet::Id start_id, lanele
         for (auto &maneuver : maneuvers)
         {
             time_progress += getManeuverDuration(maneuver, epsilon_);
+
+            ros::Time start_stamp = prev_time;
+            std::stringstream ss;
+            ss << start_stamp.sec << "." << start_stamp.nsec;
+
+            ros::Time end_stamp = time_progress;
+            std::stringstream ss2;
+            ss2 << end_stamp.sec << "." << end_stamp.nsec;
+
+            ROS_DEBUG_STREAM("current_time: " << ss.str() << ", maneuver end time: " << ss2.str());
+
             switch (maneuver.type)
             {
             case cav_msgs::Maneuver::LANE_FOLLOWING:

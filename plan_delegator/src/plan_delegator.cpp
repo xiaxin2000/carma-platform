@@ -218,6 +218,15 @@ namespace plan_delegator
 
     bool PlanDelegator::isManeuverExpired(const cav_msgs::Maneuver& maneuver, ros::Time current_time) const
     {
+        ros::Time stamp = current_time;
+        std::stringstream ss;
+        ss << stamp.sec << "." << stamp.nsec;
+
+        ros::Time end_stamp = GET_MANEUVER_PROPERTY(maneuver, end_time);
+        std::stringstream ss2;
+        ss2 << end_stamp.sec << "." << end_stamp.nsec;
+
+        ROS_DEBUG_STREAM("current_time: " << ss.str() << ", maneuver end time: " << ss2.str());
         return GET_MANEUVER_PROPERTY(maneuver, end_time) <= current_time; // TODO maneuver expiration should maybe be based off of distance not time? https://github.com/usdot-fhwa-stol/carma-platform/issues/1107
     }
 
