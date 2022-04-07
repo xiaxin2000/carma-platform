@@ -606,10 +606,12 @@ void setManeuverLaneletIds(cav_msgs::Maneuver& mvr, lanelet::Id start_id, lanele
             switch (maneuver.type)
             {
             case cav_msgs::Maneuver::LANE_FOLLOWING:
+                ROS_DEBUG_STREAM("Assigned time to LANE_FOLLOWING maneuver");
                 maneuver.lane_following_maneuver.start_time = prev_time;
                 maneuver.lane_following_maneuver.end_time = time_progress;
                 break;
             case cav_msgs::Maneuver::LANE_CHANGE:
+                ROS_DEBUG_STREAM("Assigned time to LANE_CHANGE maneuver");
                 maneuver.lane_change_maneuver.start_time = prev_time;
                 maneuver.lane_change_maneuver.end_time = time_progress;
                 break;
@@ -626,6 +628,7 @@ void setManeuverLaneletIds(cav_msgs::Maneuver& mvr, lanelet::Id start_id, lanele
                 maneuver.intersection_transit_right_turn_maneuver.end_time = time_progress;
                 break;
             case cav_msgs::Maneuver::STOP_AND_WAIT:
+                ROS_DEBUG_STREAM("Assigned time to STOP_AND_WAIT maneuver");
                 maneuver.stop_and_wait_maneuver.start_time = prev_time;
                 maneuver.stop_and_wait_maneuver.start_time = time_progress;
                 maneuver.stop_and_wait_maneuver.end_time = start_time + ros::Duration(86400); // Set maneuver time period as 24hrs since this is the end of the route
