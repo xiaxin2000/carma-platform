@@ -383,6 +383,11 @@ void setManeuverLaneletIds(cav_msgs::Maneuver& mvr, lanelet::Id start_id, lanele
 
     bool RouteFollowingPlugin::planManeuverCb(cav_srvs::PlanManeuversRequest &req, cav_srvs::PlanManeuversResponse &resp)
     {
+
+        std::stringstream ss;
+        ss << req.header.stamp.sec << "." << req.header.stamp.nsec;
+        ROS_DEBUG_STREAM("received plan maneuver request with req.header.stamp of " << ss.str());
+
         if (latest_maneuver_plan_.empty())
         {
             ROS_ERROR_STREAM("A maneuver plan has not been generated");

@@ -115,6 +115,11 @@ namespace arbitrator
     {
         ROS_INFO("Aribtrator beginning planning process!");
         ros::Time planning_process_start = ros::Time::now();
+    
+        std::stringstream ss;
+        ss << vehicle_state_.stamp.sec << "." << vehicle_state_.stamp.nsec;
+        ROS_DEBUG_STREAM("calling planning_strategy_.generate_plan() with vehicle_state_.stamp of " << ss.str());
+
         cav_msgs::ManeuverPlan plan = planning_strategy_.generate_plan(vehicle_state_);
         if (!plan.maneuvers.empty()) 
         {
@@ -172,6 +177,11 @@ namespace arbitrator
             tf_ = tf2_buffer_.lookupTransform("map", "vehicle_front", ros::Time(0), ros::Duration(1.0)); //save to local copy of transform 1 sec timeout
             tf2::fromMsg(tf_, bumper_transform_);
             vehicle_state_.stamp = tf_.header.stamp;
+            
+            std::stringstream ss;
+            ss << vehicle_state_.stamp.sec << "." << vehicle_state_.stamp.nsec;
+
+            ROS_DEBUG_STREAM("vehicle_state_.stamp in bumper_pose_cb(): " << ss.str());
         }
         catch (const tf2::TransformException &ex)
         {

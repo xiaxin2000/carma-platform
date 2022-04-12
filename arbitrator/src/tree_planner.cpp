@@ -81,6 +81,9 @@ namespace arbitrator
                 }
 
                 // Expand it, and reprioritize
+                std::stringstream ss;
+                ss << start_state.stamp.sec << "." << start_state.stamp.nsec;
+                ROS_DEBUG_STREAM("calling generate_neighbors() with start_state.stamp of " << ss.str());
                 std::vector<cav_msgs::ManeuverPlan> children = neighbor_generator_.generate_neighbors(cur_plan, start_state);
                 
                 // Compute cost for each child and store in open list

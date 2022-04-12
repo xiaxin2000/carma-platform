@@ -40,6 +40,10 @@ namespace arbitrator
         msg.request.veh_logitudinal_velocity = initial_state.velocity;
         msg.request.veh_lane_id = std::to_string(initial_state.lane_id);
 
+        std::stringstream ss;
+        ss << msg.request.header.stamp.sec << "." << msg.request.header.stamp.nsec;
+        ROS_DEBUG_STREAM("calling strategic plugin's plan_maneuver service with msg.request.header.stamp of " << ss.str());
+
         std::map<std::string, cav_srvs::PlanManeuvers> res = ci_.multiplex_service_call_for_capability(CapabilitiesInterface::STRATEGIC_PLAN_CAPABILITY, msg);
 
         // Convert map to vector of map values
