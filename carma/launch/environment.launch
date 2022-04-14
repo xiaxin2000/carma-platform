@@ -49,10 +49,12 @@
   </group>
 
   <!-- CARMA Roadway Objects Node -->
+  <!--
   <group>
     <remap from= "external_objects" to= "external_object_predictions"/>
     <include file="$(find roadway_objects)/launch/roadway_objects.launch"/>
   </group>
+  -->
 
   <!-- Traffic Incident Parser -->
   <group>
