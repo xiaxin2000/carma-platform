@@ -43,12 +43,14 @@ namespace motion_computation {
 class MotionComputationWorker {
  public:
   using PublishObjectCallback = std::function<void(const carma_perception_msgs::msg::ExternalObjectList&)>;
+  using PublishTestCallback = std::function<void(const std_msgs::msg::String&)>;
+
   using LookUpTransform = std::function<void()>;
 
   /*!
    * \brief Constructor for MotionComputationWorker
    */
-   MotionComputationWorker(const PublishObjectCallback& obj_pub,
+   MotionComputationWorker(const PublishObjectCallback& obj_pub, const PublishTestCallback& test_pub,
                           rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr logger,
                           rclcpp::node_interfaces::NodeClockInterface::SharedPtr node_clock);
   /**
@@ -80,6 +82,11 @@ class MotionComputationWorker {
    * \brief msg The proj string defining the projection.
    */
   void georeferenceCallback(const std_msgs::msg::String::UniquePtr msg);
+
+  /**
+   * \brief TEST CALLBACK
+   */
+  void testCallback(const std_msgs::msg::String::UniquePtr msg);
 
   /**
    * \brief Converts from MobilityPath's predicted points in ECEF to local map and other fields in an ExternalObject
@@ -119,6 +126,8 @@ class MotionComputationWorker {
 
   // Local copy of external object publisher
   PublishObjectCallback obj_pub_;
+
+  PublishTestCallback test_pub_;
 
   // Prediction parameters
 

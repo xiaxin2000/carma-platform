@@ -19,10 +19,10 @@
 
 namespace motion_computation {
 
-MotionComputationWorker::MotionComputationWorker(const PublishObjectCallback& obj_pub,
+MotionComputationWorker::MotionComputationWorker(const PublishObjectCallback& obj_pub, const PublishTestCallback& test_pub,
                                                  rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr logger,
                                                  rclcpp::node_interfaces::NodeClockInterface::SharedPtr node_clock)
-    : obj_pub_(obj_pub), logger_(logger), node_clock_(node_clock) {}
+    : obj_pub_(obj_pub), test_pub_(test_pub), logger_(logger), node_clock_(node_clock) {}
 
 void MotionComputationWorker::predictionLogic(carma_perception_msgs::msg::ExternalObjectList::UniquePtr obj_list) {
   carma_perception_msgs::msg::ExternalObjectList sensor_list;
@@ -121,6 +121,17 @@ void MotionComputationWorker::predictionLogic(carma_perception_msgs::msg::Extern
   bsm_obj_id_map_.clear();
   psm_list_.objects.clear();
   psm_obj_id_map_.clear();
+}
+
+void MotionComputationWorker::testCallback(const std_msgs::msg::String::UniquePtr msg) {
+  RCLCPP_INFO_STREAM(logger_->get_logger(), "RECEIVED MESSAGE ON /test_topic");
+  std::cout<< "Received a message!";
+  std::string content = msg->data;
+  std::string send_content = "motion_computation msg received: " + content;
+
+  std_msgs::msg::String send_msg;
+  send_msg.data = send_content;
+  test_pub_(send_msg);
 }
 
 void MotionComputationWorker::georeferenceCallback(const std_msgs::msg::String::UniquePtr msg) {

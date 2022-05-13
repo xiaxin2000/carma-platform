@@ -23,6 +23,7 @@ namespace motion_computation
       : carma_ros2_utils::CarmaLifecycleNode(options),
         motion_worker_(
           std::bind(&MotionComputationNode::publishObject, this, std_ph::_1),
+          std::bind(&MotionComputationNode::publishTest, this, std_ph::_1),
           get_node_logging_interface(), get_node_clock_interface()
         )
   {
@@ -69,6 +70,8 @@ namespace motion_computation
 
   carma_ros2_utils::CallbackReturn MotionComputationNode::handle_on_configure(const rclcpp_lifecycle::State &)
   {
+    std::cout<<"Configuring!!!";
+    RCLCPP_WARN_STREAM(get_logger(), "MotionComputationNode trying to configure");
     RCLCPP_INFO_STREAM(get_logger(), "MotionComputationNode trying to configure");
 
     // Reset config
@@ -108,9 +111,21 @@ namespace motion_computation
     georeference_sub_ = create_subscription<std_msgs::msg::String>("georeference", 1,
                                                               std::bind(&MotionComputationWorker::georeferenceCallback, &motion_worker_, std_ph::_1));
 
+    rclcpp::SubscriptionOptions subscription_options;
+    subscription_options.use_intra_process_comm = rclcpp::IntraProcessSetting::Disable; // A subscriber initialized with this will have intra-process comms disabled
+
+    auto subscription_qos = rclcpp::QoS(rclcpp::KeepLast(5)); // A subscriber with this QoS will have the queue size provided to KeepLast()
+    subscription_qos.transient_local();  // If it is possible that this node is a late-joiner to a topic, it must be set to transient_local to receive earlier messages that were missed.
+                                         // Note: The publisher's QoS must be set to transisent_local() as well for earlier messages to be resent to this later-joiner.
+    
+    test_sub_ = create_subscription<std_msgs::msg::String>("test_topic", subscription_qos,
+                                                              std::bind(&MotionComputationWorker::testCallback, &motion_worker_, std_ph::_1), subscriber_options);
+
 
     // Setup publishers
     carma_obj_pub_ = create_publisher<carma_perception_msgs::msg::ExternalObjectList>("external_object_predictions", 2);
+
+    test_pub_ = create_publisher<std_msgs::msg::String>("test_topic", 10);
 
     // Set motion_worker_'s prediction parameters
     motion_worker_.setPredictionTimeStep(config_.prediction_time_step);
@@ -133,6 +148,12 @@ namespace motion_computation
   void MotionComputationNode::publishObject(const carma_perception_msgs::msg::ExternalObjectList& obj_pred_msg) const
   {
     carma_obj_pub_->publish(obj_pred_msg);
+  }
+
+  void MotionComputationNode::publishTest(const std_msgs::msg::String& msg) const
+  {
+    RCLCPP_INFO_STREAM(get_logger(), "PUBLISHING TO /test_topic");
+    test_pub_->publish(msg);
   }
 
 } // namespace motion_computation

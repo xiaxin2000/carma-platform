@@ -44,6 +44,7 @@ namespace traffic_incident_parser
 
     // Publishers
     carma_ros2_utils::PubPtr<carma_v2x_msgs::msg::TrafficControlMessage> traffic_control_msg_pub_;
+    carma_ros2_utils::PubPtr<std_msgs::msg::String> test_pub_;
 
     // World Model Listener; must be declared before traffic_parser_worker_ for proper initialization
     carma_wm::WMListener wm_listener_;
@@ -62,6 +63,7 @@ namespace traffic_incident_parser
     // Overrides
     ////
     carma_ros2_utils::CallbackReturn handle_on_configure(const rclcpp_lifecycle::State &);
+    carma_ros2_utils::CallbackReturn handle_on_activate(const rclcpp_lifecycle::State &);
 
     /**
      * \brief Publish traffic control message 

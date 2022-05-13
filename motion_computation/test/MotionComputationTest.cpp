@@ -29,6 +29,7 @@
 
 namespace motion_computation
 {
+    /**
     TEST(MotionComputationWorker, Constructor)
     {   
         // Create logger object
@@ -88,10 +89,6 @@ namespace motion_computation
 
         carma_perception_msgs::msg::ExternalObject msg;
 
-        /*Create test message*/
-        msg.presence_vector = 16;
-        msg.object_type = 3;
-        /*Test ExternalObject Presence Vector Values*/
         ASSERT_TRUE(msg.presence_vector > 0);
         bool pvValid = false;
         for(auto i= 0; i<10; i++) //Test whether presence vector values in ExternalObject are valid
@@ -100,22 +97,11 @@ namespace motion_computation
                 pvValid = true;
         }
         ASSERT_EQ(pvValid, true);
-        /*Test ExternalObject Object Type Values*/
         bool otValid = false;
         for(int i =0; i<=4; i++)
         {
             if(msg.object_type == i)
-                otValid = true;
-        }
-        ASSERT_EQ(otValid, true);
-
-        /*Test ExternalObjectList*/
-        carma_perception_msgs::msg::ExternalObjectList obj;
-
-        obj.objects.push_back(msg);
-        ASSERT_TRUE(obj.objects.size() > 0);
-
-        // add mobilitypath data
+         
         carma_v2x_msgs::msg::MobilityPath input_path;
 
         // INPUT PATH
@@ -529,5 +515,6 @@ namespace motion_computation
 
 
     }
+    **/
 
 } // namespace motion_computation

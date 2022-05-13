@@ -43,9 +43,11 @@ class MotionComputationNode : public carma_ros2_utils::CarmaLifecycleNode {
   carma_ros2_utils::SubPtr<carma_v2x_msgs::msg::BSM> bsm_sub_;
   carma_ros2_utils::SubPtr<carma_v2x_msgs::msg::PSM> psm_sub_;
   carma_ros2_utils::SubPtr<std_msgs::msg::String> georeference_sub_;
+  carma_ros2_utils::SubPtr<std_msgs::msg::String> test_sub_;
 
   // Publishers
   carma_ros2_utils::PubPtr<carma_perception_msgs::msg::ExternalObjectList> carma_obj_pub_;
+  carma_ros2_utils::PubPtr<std_msgs::msg::String> test_pub_;
 
   // MotionComputationWorker class object
   MotionComputationWorker motion_worker_;
@@ -69,6 +71,11 @@ class MotionComputationNode : public carma_ros2_utils::CarmaLifecycleNode {
    * \param obj_pred_msg ExternalObjectList message to be published
    */
   void publishObject(const carma_perception_msgs::msg::ExternalObjectList &obj_pred_msg) const;
+
+  /**
+   * \brief TEST PUBLISHER
+   */
+  void publishTest(const std_msgs::msg::String &msg) const;
 
   ////
   // Overrides

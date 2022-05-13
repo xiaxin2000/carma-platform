@@ -36,9 +36,37 @@ namespace traffic_incident_parser
                                                               std::bind(&TrafficIncidentParserWorker::mobilityOperationCallback, &traffic_parser_worker_, std_ph::_1));
 
     // Setup publishers
-    traffic_control_msg_pub_ = create_publisher<carma_v2x_msgs::msg::TrafficControlMessage>("geofence", 100);
+    rclcpp::PublisherOptions publisher_options;
+    publisher_options.use_intra_process_comm = rclcpp::IntraProcessSetting::Disable; // A publisher initialized with this will have intra-process comms disabled
+
+    auto publisher_qos = rclcpp::QoS(rclcpp::KeepAll()); // A publisher with this QoS will store all messages that it has sent on the topic
+    publisher_qos.transient_local();  // A publisher with this QoS will re-send all (when KeepAll is used) messages to all late-joining subscribers 
+
+    traffic_control_msg_pub_ = create_publisher<carma_v2x_msgs::msg::TrafficControlMessage>("geofence", publisher_qos, publisher_options);
+
+    auto publisher_qos2 = rclcpp::QoS(rclcpp::KeepAll()); // New QoS with KeepAll as the initial setting
+    publisher_qos2.transient_local(); 
+    test_pub_ = create_publisher<std_msgs::msg::String>("test_topic", publisher_qos2, publisher_options);
 
     // Return success if everthing initialized successfully
+    return CallbackReturn::SUCCESS;
+  }
+
+  carma_ros2_utils::CallbackReturn TrafficIncidentParserNode::handle_on_activate(const rclcpp_lifecycle::State &prev_state)
+  {
+    std_msgs::msg::String msg1;
+    msg1.data = "Test1";
+
+    std_msgs::msg::String msg2;
+    msg2.data = "Test2";
+
+    std_msgs::msg::String msg3;
+    msg3.data = "Test3";
+
+    test_pub_->publish(msg1);
+    test_pub_->publish(msg2);
+    test_pub_->publish(msg3);
+    
     return CallbackReturn::SUCCESS;
   }
 
