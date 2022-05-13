@@ -119,12 +119,13 @@ namespace motion_computation
                                          // Note: The publisher's QoS must be set to transisent_local() as well for earlier messages to be resent to this later-joiner.
     
     test_sub_ = create_subscription<std_msgs::msg::String>("test_topic", subscription_qos,
-                                                              std::bind(&MotionComputationWorker::testCallback, &motion_worker_, std_ph::_1), subscriber_options);
+                                                              std::bind(&MotionComputationWorker::testCallback, &motion_worker_, std_ph::_1), subscription_options);
 
 
     // Setup publishers
     carma_obj_pub_ = create_publisher<carma_perception_msgs::msg::ExternalObjectList>("external_object_predictions", 2);
 
+    RCLCPP_INFO_STREAM(get_logger(), "Setting up test_topic publisher");
     test_pub_ = create_publisher<std_msgs::msg::String>("test_topic", 10);
 
     // Set motion_worker_'s prediction parameters
