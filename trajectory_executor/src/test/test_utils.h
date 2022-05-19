@@ -33,7 +33,7 @@ class TrajectoryExecutorTestSuite : public ::testing::Test
         TrajectoryExecutorTestSuite() {
             _nh = ros::NodeHandle();
             traj_pub = _nh.advertise<cav_msgs::TrajectoryPlan>("trajectory", 5);
-            traj_sub = _nh.subscribe<cav_msgs::TrajectoryPlan>("/guidance/pure_pursuit/plan_jerk_trajectory", 100, 
+            traj_sub = _nh.subscribe<cav_msgs::TrajectoryPlan>("/guidance/pure_pursuit/plan_trajectory", 100, 
             &TrajectoryExecutorTestSuite::trajEmitCallback, this);
             traj_sub2 = _nh.subscribe<cav_msgs::TrajectoryPlan>("/guidance/PlatooningControlPlugin/plan_trajectory", 100, 
             &TrajectoryExecutorTestSuite::trajEmitCallback, this);
@@ -101,7 +101,7 @@ cav_msgs::TrajectoryPlan buildSampleTraj() {
     ros::Time cur_time = ros::Time::now();
     for (int i = 0; i < 10; i++) {
         cav_msgs::TrajectoryPlanPoint p;
-        p.controller_plugin_name = "Pure Pursuit Jerk";
+        p.controller_plugin_name = "Pure Pursuit";
         p.lane_id = "0";
         p.planner_plugin_name = "cruising";
         ros::Duration dur(i * 0.13);

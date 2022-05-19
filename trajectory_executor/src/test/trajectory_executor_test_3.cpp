@@ -24,12 +24,13 @@ TEST_F(TrajectoryExecutorTestSuite, test_control_plugin_not_found) {
     waitForSubscribers(traj_pub, 1, 500);
     cav_msgs::TrajectoryPlan plan = buildSampleTraj();
 
-    plan.trajectory_points[3].controller_plugin_name = "NULL";
+    plan.trajectory_points[0].controller_plugin_name = "NULL";
+
     traj_pub.publish(plan);
+    
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
-
-    ASSERT_TRUE(recv_sys_alert) << "Failed to receive system shutdown alert message from TrajectoryExecutor node.";
+    ASSERT_EQ(msg_count, 0) << "TrajectoryExecutor published plans that began with an unknown control plugin";
 }
 
 /*!

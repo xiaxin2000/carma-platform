@@ -43,20 +43,6 @@ TEST_F(TrajectoryExecutorTestSuite, test_emit_traj) {
 } 
 
 /*!
- * \brief Test that the trajectory executor will shutdown properly after running 
- * over the end of it's current trajectory
- */
-TEST_F(TrajectoryExecutorTestSuite, test_runover_shutdown) {
-    waitForSubscribers(traj_pub, 1, 500);
-    cav_msgs::TrajectoryPlan plan = buildSampleTraj();
-
-    traj_pub.publish(plan);
-
-    std::this_thread::sleep_for(std::chrono::milliseconds(1500));
-    ASSERT_TRUE(recv_sys_alert) << "Failed to receive system shutdown alert message from TrajectoryExecutor node.";
-}
-
-/*!
  * \brief Main entrypoint for unit tests
  */
 int main (int argc, char **argv) {
