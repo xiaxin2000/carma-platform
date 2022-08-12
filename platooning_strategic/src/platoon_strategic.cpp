@@ -349,6 +349,10 @@ namespace platoon_strategic
                     mobility_operation_publisher_(infoOperation);
                     lastHeartBeatTime = ros::Time::now().toNSec()/1000000; 
                     ROS_DEBUG_STREAM("Published heart beat platoon INFO mobility operatrion message");
+
+                    if(!has_broadcasted_initial_mob_op_msg_) {
+                        has_broadcasted_initial_mob_op_msg_ = true;
+                    }
                 }
             // Task 2
             // if (isTimeForHeartBeat) {
@@ -1052,6 +1056,11 @@ namespace platoon_strategic
 
     void PlatoonStrategicPlugin::mob_op_cb_leader(const cav_msgs::MobilityOperation& msg)
     {   
+        // Do not process received MobilityOperation message until this vehicle has broadcasted its initial MobilityOperation message
+        if (!has_broadcasted_initial_mob_op_msg_) {
+            return;
+        }
+
         std::string strategyParams = msg.strategy_params;
         std::string senderId = msg.header.sender_id;
         std::string platoonId = msg.header.plan_id;

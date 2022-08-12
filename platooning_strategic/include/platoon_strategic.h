@@ -497,6 +497,8 @@ namespace platoon_strategic
             double desiredJoinGap = 30.0; // m
             double desiredJoinTimeGap = 4.0; // s
 
+            bool has_broadcasted_initial_mob_op_msg_ = false;
+
 
             // Strategy types
             const std::string MOBILITY_STRATEGY = "Carma/Platooning";
