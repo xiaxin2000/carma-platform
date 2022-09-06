@@ -260,7 +260,9 @@ void LocalizationManager::posePubTick(const ros::TimerEvent& te)
 
   // Publish current pose message if available
   if (current_pose_){
-    pose_pub_(*current_pose_);
+    auto temp = current_pose_;
+    temp.pose.position.y -= 0.3;
+    pose_pub_(*temp);
   }
 
   // Create and publish status report message
