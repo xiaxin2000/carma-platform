@@ -37,7 +37,6 @@ FROM usdotfhwastoldev/autoware.ai:time AS base-image
 
 FROM base-image AS source-code
 
-RUN mkdir ~/src
 COPY --chown=carma . /home/carma/src/carma-platform/
 RUN ~/src/carma-platform/docker/checkout.bash
 
@@ -53,7 +52,6 @@ ARG ROS2_PACKAGES=""
 ENV ROS2_PACKAGES=${ROS2_PACKAGES}
 
 # Copy the source files from the previous stage and build/install
-RUN mkdir ~/carma_ws
 COPY --from=source-code --chown=carma /home/carma/src /home/carma/carma_ws/src
 
 RUN ~/carma_ws/src/carma-platform/docker/install.sh
