@@ -33,9 +33,9 @@
 # Stage 1 - Acquire the CARMA source as well as any extra packages
 # /////////////////////////////////////////////////////////////////////////////
 
-FROM a11f794302d6 AS base-image
+FROM b3bf09794e2e AS base-image
 
-FROM a11f794302d6 AS source-code
+FROM b3bf09794e2e AS source-code
 
 RUN mkdir ~/src
 COPY --chown=carma . /home/carma/src/carma-platform/
@@ -46,7 +46,7 @@ RUN ~/src/carma-platform/docker/checkout.bash
 # /////////////////////////////////////////////////////////////////////////////
 
 
-FROM a11f794302d6 AS install
+FROM b3bf09794e2e AS install
 ARG ROS1_PACKAGES=""
 ENV ROS1_PACKAGES=${ROS1_PACKAGES}
 ARG ROS2_PACKAGES=""
@@ -63,7 +63,7 @@ RUN ~/carma_ws/src/carma-platform/docker/install.sh
 # /////////////////////////////////////////////////////////////////////////////
 
 
-FROM a11f794302d6
+FROM b3bf09794e2e
 
 ARG BUILD_DATE="NULL"
 ARG VCS_REF="NULL"

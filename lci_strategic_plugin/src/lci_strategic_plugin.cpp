@@ -762,11 +762,14 @@ void LCIStrategicPlugin::planWhenAPPROACHING(const cav_srvs::PlanManeuversReques
 
       if (early_arrival_time_green_et.toSec() - nearest_green_signal_start_time.toSec() < config_.green_light_time_buffer)
       {
-        nearest_green_entry_time_cached_ = nearest_green_signal_start_time + ros::Duration(config_.green_light_time_buffer);
+        nearest_green_entry_time_cached_ = nearest_green_signal_start_time + ros::Duration(config_.green_light_time_buffer) + ros::Duration(0.01);
+        ROS_DEBUG_STREAM("Cache applying condition 1" << std::to_string(nearest_green_entry_time_cached_.get().toSec()));
       }
       else
       {
         nearest_green_entry_time_cached_ = nearest_green_entry_time + ros::Duration(config_.green_light_time_buffer);
+        ROS_DEBUG_STREAM("Cache applying condition 2: " << std::to_string(nearest_green_entry_time_cached_.get().toSec()));
+
         // NOTE: around ending time of green signal duration, this buffer addition might push ET out of green phase.
         // However, that is okay because those timestamps that fit this criteria is treated non-green by later late/early arrival checks
       }
