@@ -15,6 +15,7 @@
  */
 
 #include "route/route_generator_worker.hpp"
+#include <iostream>
 
 namespace route {
 
@@ -216,12 +217,31 @@ namespace route {
         }
 
         // convert points in 2d to map frame
-        destination_points_in_map_ = lanelet::utils::transform(destination_points, [](auto a) { return lanelet::traits::to2D(a); });
+        // destination_points_in_map_ = lanelet::utils::transform(destination_points, [](auto a) { return lanelet::traits::to2D(a); });
+
+        // lanelet::BasicPoint2d p_des(45.13562774658203,77.08840942382812);//right lane end position
+        // lanelet::BasicPoint2d p_des(73.82698822021484,99.65948486328125);//left lane end position
+        // lanelet::BasicPoint2d p_des(4.289697170257568,-20.500165939331055);//parking structure end position
+
+        // lanelet::BasicPoint2d p_des(-19.919483184814453, 9.962377548217773);//vtti end position south direction
+
+        lanelet::BasicPoint2d p_des(-2248.244873046875,1755.2298583984375);//vtti end position north direction
+
+        destination_points_in_map_.push_back(p_des);
 
         // Add vehicle as first destination point
         auto destination_points_in_map_with_vehicle = destination_points_in_map_;
             
-        lanelet::BasicPoint2d vehicle_position(vehicle_pose_->pose.position.x, vehicle_pose_->pose.position.y);
+        // lanelet::BasicPoint2d vehicle_position(0.7471867799758911, -2.4901630878448486);//right lane start position
+        // lanelet::BasicPoint2d vehicle_position(-3.626772165298462, -1.72121262550354);//left lane start position
+        // lanelet::BasicPoint2d vehicle_position(-212.2182159423828, -17.12858772277832);//parking structure start position
+
+        // lanelet::BasicPoint2d vehicle_position(-2248.244873046875,1755.2298583984375);//vtti start position south direction
+
+        lanelet::BasicPoint2d vehicle_position(-19.919483184814453, 9.962377548217773);//vtti start position north direction
+        
+
+
         destination_points_in_map_with_vehicle.insert(destination_points_in_map_with_vehicle.begin(), vehicle_position);
 
         int idx = 0;
@@ -239,7 +259,7 @@ namespace route {
             }
             idx ++;
         }
-            
+
         // get route graph from world model object
         auto p = world_model_->getMapRoutingGraph();
         // generate a route
@@ -502,12 +522,45 @@ namespace route {
         {
             RCLCPP_WARN_STREAM(logger_->get_logger(), ex.what());
         }
-        
+
         geometry_msgs::msg::PoseStamped updated_vehicle_pose;
-        updated_vehicle_pose.pose.position.x = frontbumper_transform_.getOrigin().getX();
-        updated_vehicle_pose.pose.position.y = frontbumper_transform_.getOrigin().getY();
+        // updated_vehicle_pose.pose.position.x = 0.7471867799758911;//right lane start point
+        // updated_vehicle_pose.pose.position.y = -2.4901630878448486;
+
+        // updated_vehicle_pose.pose.position.x =-3.626772165298462;//left lane start point
+        // updated_vehicle_pose.pose.position.y =-1.72121262550354;
+
+        updated_vehicle_pose.pose.position.x =-212.2182159423828;//parking structure start position
+        updated_vehicle_pose.pose.position.y =-17.12858772277832;
+
         updated_vehicle_pose.pose.position.z = frontbumper_transform_.getOrigin().getZ();
         vehicle_pose_ = updated_vehicle_pose; 
+
+
+            lanelet::BasicPoint2d current_test_point_;
+            current_test_point_.x()=43.309;
+            current_test_point_.y()=75.915;
+            auto test_lanelet = getClosestLaneletFromRouteLanelets(current_test_point_);
+            // if (this->world_model_->getMapRoutingGraph()->right(test_lanelet))
+            // {
+            //     lanelet::Id target_lanelet_id=this->world_model_->getMapRoutingGraph()->right(test_lanelet).get().id();
+            //     RCLCPP_WARN_STREAM(logger_->get_logger(), "target_lanelet_id =  " << std::to_string(target_lanelet_id));
+            //     RCLCPP_WARN_STREAM(logger_->get_logger(), "target_lanelet_id =  " << std::to_string(target_lanelet_id));
+            //     RCLCPP_WARN_STREAM(logger_->get_logger(), "target_lanelet_id =  " << std::to_string(target_lanelet_id));
+            //     RCLCPP_WARN_STREAM(logger_->get_logger(), "target_lanelet_id =  " << std::to_string(target_lanelet_id));
+            //     RCLCPP_WARN_STREAM(logger_->get_logger(), "target_lanelet_id =  " << std::to_string(target_lanelet_id));
+            //     RCLCPP_WARN_STREAM(logger_->get_logger(), "target_lanelet_id =  " << std::to_string(target_lanelet_id));
+
+            // }else
+            // {
+            //     RCLCPP_WARN_STREAM(logger_->get_logger(), "no no no no no target_lanelet_id");
+            //     RCLCPP_WARN_STREAM(logger_->get_logger(), "no no no no no target_lanelet_id");
+            //     RCLCPP_WARN_STREAM(logger_->get_logger(), "no no no no no target_lanelet_id");
+            //     RCLCPP_WARN_STREAM(logger_->get_logger(), "no no no no no target_lanelet_id");
+            //     RCLCPP_WARN_STREAM(logger_->get_logger(), "no no no no no target_lanelet_id");
+            //     RCLCPP_WARN_STREAM(logger_->get_logger(), "no no no no no target_lanelet_id");
+            // }
+
             
         if(this->rs_worker_.getRouteState() == RouteStateWorker::RouteState::FOLLOWING) {
             // convert from pose stamp into lanelet basic 2D point

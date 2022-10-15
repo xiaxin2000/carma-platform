@@ -308,6 +308,8 @@ namespace basic_autonomy
             lanelet::ConstLanelet current_lanelet = starting_lanelet;
             reference_centerline.insert(reference_centerline.end(), current_lanelet_centerline.begin(), current_lanelet_centerline.end());
 
+            ROS_DEBUG_STREAM("reference_centerline.size(): " << reference_centerline.size());
+
             ROS_DEBUG_STREAM("Searching for shared boundary with starting lanechange lanelet " << std::to_string(current_lanelet.id()) << " and ending lanelet " << std::to_string(ending_lanelet.id()));
             while(!shared_boundary_found){
                 //Assumption- Adjacent lanelets share lane boundary
@@ -345,10 +347,13 @@ namespace basic_autonomy
                 }
             }
 
+            ROS_DEBUG_STREAM("starting_lane.size(): " << starting_lane.size());
             // Create the target lane centerline using lanelets adjacent to the lanechange lanelets in the starting lane
             std::vector<lanelet::BasicPoint2d> target_lane_centerline;
             for(size_t i = 0;i<starting_lane.size();++i){
                 lanelet::ConstLanelet curr_end_lanelet;
+
+                ROS_DEBUG_STREAM("starting_lane.size(): " << i );
                 
                 if(is_lanechange_left){
                     
@@ -374,9 +379,11 @@ namespace basic_autonomy
                 auto target_lane_linestring = curr_end_lanelet.centerline2d().basicLineString();
                 //Concatenate linestring starting from + 1 to avoid overlap
                 target_lane_centerline.insert(target_lane_centerline.end(), target_lane_linestring.begin() + 1, target_lane_linestring.end());
+
+                ROS_DEBUG_STREAM("target_lane_linestring.size(): " << target_lane_linestring.size());
                 
             }
-
+            ROS_DEBUG_STREAM("target_lane_centerline.size(): " << target_lane_centerline.size());
             //Downsample centerlines
             // 400 value here is an arbitrary attempt at improving performance by reducing copy operations. 
             // Value picked based on annecdotal evidence from STOL system testing
@@ -385,16 +392,22 @@ namespace basic_autonomy
             downsampled_starting_centerline.reserve(400);
             downsampled_starting_centerline = carma_utils::containers::downsample_vector(reference_centerline, downsample_ratio);
 
+            ROS_DEBUG_STREAM("downsampled_starting_centerline.size(): " << downsampled_starting_centerline.size());
+            ROS_DEBUG_STREAM("reference_centerline.size(): " << reference_centerline.size());
+
             std::vector<lanelet::BasicPoint2d> downsampled_target_centerline;
             downsampled_target_centerline.reserve(400);
             downsampled_target_centerline = carma_utils::containers::downsample_vector(target_lane_centerline, downsample_ratio);
 
+            ROS_DEBUG_STREAM("downsampled_target_centerline.size(): " << downsampled_target_centerline.size());
             //If points are not the same size - resample to ensure same size along both centerlines
             if(downsampled_starting_centerline.size() != downsampled_target_centerline.size())
             {
                 auto centerlines = resample_linestring_pair_to_same_size(downsampled_starting_centerline, downsampled_target_centerline);
                 downsampled_starting_centerline = centerlines[0];
                 downsampled_target_centerline = centerlines[1];
+                ROS_DEBUG_STREAM("downsampled_starting_centerline.size(): " << downsampled_starting_centerline.size());
+                ROS_DEBUG_STREAM("downsampled_target_centerline.size(): " << downsampled_target_centerline.size());
 
             }
 

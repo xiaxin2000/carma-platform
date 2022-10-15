@@ -36,7 +36,7 @@ namespace guidance
             case State::DRIVERS_READY:
                 if(signal == Signal::ACTIVATED)
                 {
-                    current_guidance_state_ = State::ACTIVE;
+                    current_guidance_state_ = State::ENGAGED;
                 }
                 break;
             case State::ACTIVE:
@@ -45,37 +45,37 @@ namespace guidance
                     current_guidance_state_ = State::ENGAGED;
                 } else if(signal == Signal::DISENGAGED)
                 {
-                    current_guidance_state_ = State::DRIVERS_READY;
+                    current_guidance_state_ = State::ENGAGED;
                 }
                 break;
             case State::ENGAGED:
                 if(signal == Signal::DISENGAGED)
                 {
-                    current_guidance_state_ = State::DRIVERS_READY;
+                    current_guidance_state_ = State::ENGAGED;
                 } else if(signal == Signal::OVERRIDE)
                 {
-                    current_guidance_state_ = State::INACTIVE;
+                    current_guidance_state_ = State::ENGAGED;
                 } else if(signal == Signal::PARK)
                 {
-                    current_guidance_state_ = State::ENTER_PARK;
+                    current_guidance_state_ = State::ENGAGED;
                 }
                 break;
             case State::INACTIVE:
                 if(signal == Signal::ACTIVATED)
                 {
-                    current_guidance_state_ = State::ACTIVE;
+                    current_guidance_state_ = State::ENGAGED;
                 }else if(signal == Signal::INITIALIZED){
-                    current_guidance_state_ = State::DRIVERS_READY;
+                    current_guidance_state_ = State::ENGAGED;
                 }
                 break;
             case State::ENTER_PARK:
                 if(signal == Signal::OVERRIDE)
                 {
-                    current_guidance_state_ = State::INACTIVE;
+                    current_guidance_state_ = State::ENGAGED;
                 } 
                 else if(signal == Signal::DISENGAGED)
                 {
-                    current_guidance_state_ = State::DRIVERS_READY;
+                    current_guidance_state_ = State::ENGAGED;
                 }
                 break;
             default:
